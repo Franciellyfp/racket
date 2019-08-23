@@ -1,0 +1,398 @@
+;; Desenvolver o programa volume-cilindro, que consome o raio da base do cilindro e a altura
+;;do cilindro, e calcula o volume do cilindro.
+
+;; Contrato: Número, Número -> Número
+;; Calcular o volume do cilindro
+;; para chamar a função (volume-cilindro 2 3)
+;; Exemplo: (volume-cilindro 2 3) = 37.68
+
+(define (volume-cilindro raio altura)
+  (* raio raio altura 3.14))
+
+(check-expect (volume-cilindro 2 3) 37.68)
+
+;;Desenvolver o programa altura, que calcula a altura que um foguete atinge em um dado
+;;intervalo de tempo. Se o foguete acelera a uma taxa constante g, ele atinge a velocidade v = g×t
+;;e a altura 1/2 × v × t, em t unidades de tempo.
+
+;; Contrato: Número, Número -> Número
+;; Objetivo: Calcular a altura de um foguete
+
+(define (calc-altura aceleracao tempo)
+  (* (/ 1 2) (* aceleracao tempo) tempo))
+
+(check-expect (calc-altura 2 4) 16)
+
+;;O custo total de uma obra envolve o gasto com material de construção e o custo da mão-deobra.
+;;Sabe-se que a construtora recebe um certo valor de um contratante pela execução da obra.
+;;Crie uma função que calcule o lucro obtido por esta construtora ao fim de uma obra, levando-se
+;;em consideração a quantia recebida e o seu custo. Faça a descrição completa da função.
+
+;; Contrato: Número, Número, Número -> Número
+;; Lucro total de uma obra
+
+(define (lucro-total gasto-material mão-de-obra valor)
+  (- valor (+ gasto-material mão-de-obra)))
+
+(check-expect (lucro-total 10 20 30) 0)
+
+;; Desenvolver a função juro que produz não a taxa a ser paga mas a quantidade de juro paga. O
+;; banco paga uma taxa constante de 4% para depósitos até $1000, taxa de 4,5% para depósitos até
+;; $5000, e uma taxa de 5% para depósitos acima de %5000. Por exemplo, (juro 1000) produz 40.
+
+;; Contrato: Número -> Número
+;; Objetivo: Retornar a quantidade de juro paga
+
+(define (juro valor)
+  (cond
+    [(<= valor 1000) (* valor 0.04)]
+    [(<= valor 5000) (* valor 0.045)]
+    [else (* valor 0.05)]))
+
+;; Estruturas
+;; Definição da estrutura
+
+(define-struct pessoa (nome idade sexo))
+
+;; Criação de uma instância do tipo
+(define p (make-pessoa "Anna" 18 'f))
+
+;; Desenvolva um sistema que controle dados de um campeonato de futebol amador. O
+;; sistema deve permitir armazenarem-se os dados de cada time (nome, número de jogos, número de vitórias,
+;; número de empates e número de derrotas), sendo que o número de times
+;; pode variar a cada edição do campeonato. O sistema também controla as informações de
+;; jogos realizados, contendo os times envolvidos e número de gols marcados pelos locais e pelos
+;; visitantes. Para cada jogo, vitória vale 3 pontos, empate vale 1 ponto e derrota, 0 pontos.
+;; Para este sistema, apresente o quê é pedido.
+
+;; Definição das estruturas
+(define-struct time (nome número-de-jogos número-de-vitórias número-de-empates número-de-derrotas))
+(define-struct jogo (time-local time-visitante gol-local gol-visitante))
+
+;; (define time-exemplo (make-time nome número-de-jogos número-de-vitórias número-de-empates número-de-derrotas))
+;; nome, String, nome do time
+;; número-de-jogos, Número, número de jogos do time
+;; número-de-vitórias, Número, número de vitórias do time
+;; número-de-empates, Número, número de empates do time
+;; número-de-derrotas, Número, número de derrotas do time
+
+(define time-um (make-time "Grêmio" 6 0 0 6))
+(define time-dois (make-time "Inter" 6 6 0 0))
+(define time-três (make-time "São José" 6 1 4 1))
+
+;; (define jogo-exemplo (make-jogo time-local time-visitante gol-local gol-visitante))
+;; time-local, Time, é o elemento nome da estrutura Time
+;; time-visitante, Time, é o elemento nome da estrutura Time
+;; gol-local, Número, número de gol marcado pelo time da casa
+;; gol-visitante, Número, número de gol marcado pelo time visitante
+
+(define jogo-um (make-jogo "Grêmio" "Inter" 5 2))
+(define jogo-dois(make-jogo "Inter" "São José" 4 0))
+(define jogo-três (make-jogo "São José" "Grêmio" 3 0))
+
+;; Expressões Condicionais
+
+;; Desenvolva uma função que consuma um salário bruto e produza a quantia de imposto
+;; devida. Para um salário bruto de R$240,00 ou menos, o imposto é de 0%; acima
+;; de R$240,00 até R$480,00, o imposto é de 15%. Acima de $480, o imposto é de 28%.
+
+;; Contrato: Número -> Número
+;; Objetivo: Retornar a quantida de imposto de um valor X de salário bruto
+
+(define (calc-imposto valor)
+    (cond
+      [(<= valor 240) (+ valor 0)]
+      [(and (> valor 240) (<= valor 480)) (* valor 0.15)]
+      [else (* valor 0.28)]))
+
+;; Apresente uma função que calcule o salário líquido de um trabalhador a partir do
+;; número de horas trabalhadas. O salário líquido é o bruto menos o imposto. Assuma
+;; que o valor da hora de trabalho é R$15, 00 e que o imposto é calculado de acordo com
+;; as regras do exercício anterior.
+
+;; Contrato: Número -> Número
+;; Objetivo: Calcular o salário líquido de um trabalhador a partir do número de horas trabalhadas
+
+(define (calc-salario hora)
+  (cond
+  [(<= (* hora 15) 240) (* hora 15)]
+  [(and (> (* hora 15) 240) (<= (* hora 15) 480))
+        (- (* hora 15) (calc-imposto (* hora 15)))]
+  [(> (* hora 15) 480)
+        (- (* hora 15) (calc-imposto(* hora 15)))]))
+
+;; DEFINIÇÃO DA ESTRUTURA ALUNO  ===> É UM CONJUNTO
+(define-struct aluno (nome curso professor))
+;; DEFINIÇÃO DE DADOS
+;; Um elemento aluno do conjunto Aluno é uma estrutura:
+;;         (make-aluno um-nome um-curso um-professor)
+;; onde
+;;     um-nome : String, é o nome do aluno
+;;     um-curso : Símbolo é o nome do curso do aluno
+;;     um-professor : String, é o nome do professor do aluno
+
+;; EXEMPLOS DE ELEMENTOS DO CONJUNTO ALUNO:
+(make-aluno "José Silva" 'CiênciasContábeis "Malvino Belchior")
+(make-aluno "João Cardozo" 'Matemática "Lucélia Zenaide")
+(make-aluno "Mateus Lino" 'História "Bruno Rocha")
+(make-aluno "Jorge Aquino" 'Geografia "Amanda Marques")
+(make-aluno "Eduardo Silva" 'Geografia "Bruno Rocha")
+(make-aluno "Elias Júnior" 'Geografia "Amanda Marques")
+
+;; =========================================
+;; PROFESSOR JEDEÃO? ===> É UMA FUNÇÃO
+;; Dado um registro de aluno, diz se ele é aluno do prof. Jedeão da Rocha
+;; prof-Jedeao? : Aluno -> Booleano
+;; Exemplos:
+;; (prof-Jedeao? (make-aluno "Tito Lívio" 'Filosofia "Jedeão da Rocha")) = true
+;; (prof-Jedeao? (make-aluno "Jorge Aquino" 'Geografia "Amanda Marques")) = false
+
+(define (prof-Jedeao? um-aluno)
+  (cond
+    ;; caso 1: Se o professor do aluno  um-aluno for "Jedeão da Rocha", devolver true
+    [ (string=? (aluno-professor um-aluno)"Jedeão da Rocha") true ] 
+    ;; caso 2: senão, devolver false
+    [else false]
+    )
+  )
+
+;; =========================================
+;; TROCA PROFESSOR JEDEÃO:   ===> É UMA FUNÇÃO
+;; Dados um aluno e um nome de professor, troca o nome do professor
+;; atual do aluno pelo nome fornecido, caso o professor atual seja
+;; Jedeão da Rocha.
+
+;;  troca-prof : Aluno String -> Aluno
+;; Exemplos:
+;; (troca-prof (make-aluno "Tito Lívio" 'Filosofia "Jedeão da Rocha") "Leila") =
+;;    (make-aluno "Tito Lívio" 'Filosofia "Leila")
+;; (troca-prof (make-aluno "Jorge Aquino" 'Geografia "Amanda Marques") "Leila") =
+;;    (make-aluno "Jorge Aquino" 'Geografia "Amanda Marques")
+
+(define (troca-prof alunoX profnovo)
+  (cond
+    ;; Se o professor do aluno alunoX for "Jedeão da Rocha",
+    ;; devolver um registro de aluno contendo
+    [(string=? (aluno-professor alunoX) "Jedeão da Rocha")
+          (make-aluno
+          ;; o nome do alunoX
+             (aluno-nome alunoX)
+          ;; o curso do alunoX
+             (aluno-curso alunoX)
+          ;; o professor profnovo
+             profnovo 
+           )]
+    ;; senão, devolver o registro do alunoX inalterado
+    [else alunoX]))
+
+
+;; =========================================
+;; TROCA PROFESSOR Bruno Rocha:  ===> É UMA FUNÇÃO
+;; Dados um aluno, nome de professor a ser excluído e um
+;; nome de professor novo, troca o nome do professor
+;; atual do aluno pelo nome novo, caso o professor atual seja
+;; o professor a ser excluído.
+;; Exemplos:
+;; (troca-prof-dois ((make-aluno "Eduardo Silva" 'Geografia "Bruno Rocha") "Cassius Paim") =
+;;                     (make-aluno "Eduardo Silva" 'Geografia "Cassius Paim")
+;; ;; (troca-prof (make-aluno "Jorge Aquino" 'Geografia "Amanda Marques") "Cassius Paim") =
+;;    (make-aluno "Jorge Aquino" 'Geografia "Amanda Marques")
+
+(define (troca-prof-dois um-aluno prof-novo)
+  (cond
+    ;; Se o professor do aluno um-aluno for "Bruno Rocha"
+    ;; devolver um registro aluno contendo
+    [(string=? (aluno-professor um-aluno)"Bruno Rocha")
+               (make-aluno
+                ;; O nome do um-alino
+                (aluno-nome um-aluno)
+                ;; o curso do um-aluno
+                (aluno-curso um-aluno)
+                ;; o professor prof-novo
+                prof-novo
+                )]
+               ;; Senão, devolver o registro do aluno inalterado
+               [else um-aluno]))
+
+;; DEFINIÇÃO DA ESTRUTURA ALUNO-ACADEMIA  ===> É UM CONJUNTO
+(define-struct aluno-academia (nome modalidade professor))
+;; DEFINIÇÃO DE DADOS
+;; Um elemento aluno-academia do conjunto Aluno-Academia é uma estrutura:
+;;          (make-aluno-academia um-nome uma-modalidade um-professor)
+;; onde:
+;; um-nome: String, é o nome do aluno-academia
+;; uma-modalidade: Símbolo, é a modalidade do aluno na academia
+;; um-professor: String, é o nome do professor na academia
+
+;; EXEMPLOS DE ELEMENTOS DO CONJUNTO ALUNO:
+(make-aluno-academia "Anderson Lima" 'Bike "Ricardo Silva")
+(make-aluno-academia "Francielly Pedroso" 'Musculação "Vinícius Lima")
+(make-aluno-academia "Camila Ferreira" 'Yoga "Jaqueline Moraes")
+(make-aluno-academia "Beatriz Silva" 'Bike "Ricardo Silva")
+
+;; =========================================
+;; PROFESSOR RICARDO ==> É UMA FUNÇÃO
+;; Dado um registro de aluno-academia, diz se ele é aluno do professor Ricardo Silva
+;; prof-Ricardo? : Aluno -> Booleano
+;; Exemplos:
+;; (prof-Ricardo? (make-aluno-academia "Anderson Lima" 'Bike "Ricardo Silva")) = True
+;; (prof-Ricardo? (make-aluno-academia "Camila Ferreira" 'Yoga "Jaqueline Moraes")) = False
+
+(define (prof-Ricardo? um-aluno)
+  (cond
+  ;; caso 1: Se o professor do aluno-academia um-aluno for "Ricardo Silva", devolver true
+  [(string=? (aluno-academia-professor um-aluno)"Ricardo Silva") true]
+  ;; caso 2: senão, devolver false
+  [else false]
+  )
+ )
+ 
+ ;; =================================
+ ;; TROCA PROFESSOR RICARDO ==> É UMA FUNÇÃO
+ ;; Dados um aluno-academia e um nome de professor, troca o nome do professor
+ ;; atual do aluno-academia pelo nome fornecido, caso o professor atual seja "Ricardo Silva"
+ 
+ ;; troca-prof-três: Aluno-Academia String -> Aluno-Academia
+ ;; Exemplos:
+ ;; (troca-prof-três (make-aluno-academia "Beta Cardoso" 'Bike "Ricardo Silva") "Cassius Paim")
+ ;;               (make-aluno-academia "Beta Cardoso" 'Bike "Cassium Paim")
+ ;; (troca-prof-três (make-aluno-academia "Jussara Silva" 'Musculação "Leila Carvalho")"Cassius Paim")
+ ;;                (make-aluno-academia "Jussara Silva" 'Musculação "Leila Carvalho")
+				
+	(define (troca-prof-três um-aluno um-prof-novo)
+	   (cond
+	   ;; Se o professor do aluno-academia um-aluno for "Ricardo Silva"
+	   ;; devolver um registro contendo:
+	   [(string=? (aluno-academia-professor um-aluno) "Ricardo Silva")
+	               (make-aluno
+                ;; O nome do um-alino
+                (aluno-academia-nome um-aluno)
+                ;; o curso do um-aluno
+                (aluno-academia-modalidade um-aluno)
+                ;; o professor prof-novo
+                um-prof-novo
+                )]
+               ;; Senão, devolver o registro do aluno inalterado
+               [else um-aluno]))
+		
+;; Escreva a definição da estrutura e a definição de dados para representar um instante de tempo
+;; a partir da meia-noite. Um instante de tempo consiste de 3 números: hora, minutos e segundos.
+
+;; DEFINIÇÃO DA ESTRUTURA INSTANTE-DE-TEMPO => É UMA FUNÇÃ0
+(define-struct instante-de-tempo(horas minutos segundos))
+
+;; DEFINIÇÃO DE DADOS:
+;; Um elemento instante-de-tempo do conjunto Instante-De-Tempo é uma estrutura
+;;              (make-instante-de-tempo uma-hora um-minuto um-segundo)
+;; Onde:
+;; uma-hora: Número, é a hora do horas
+;; um-minuto: Número, é o minuto do minuto
+;; um-segundo: Número, é o segundo do segundo
+
+(make-instante-de-tempo 1 30 01)
+(make-instante-de-tempo 2 40 03)
+
+;; Dados um time e os jogos de um campeonato, construa um programa que atualize as
+;; informações deste time em termos do número de jogos realizados.
+
+(define (conta-jogos-time lista-de-jogos novo-time)
+  (cond
+    [(empty? lista-de-jogos) 0]
+    [(or (string=? novo-time (jogo-local(first lista-de-jogos)))
+         (string=? novo-time (jogo-visitante(first lista-de-jogos))))
+     (+ 1 (conta-jogos-time (rest lista-de-jogos) novo-time))]
+    [else (conta-jogos-time (rest lista-de-jogos) novo-time)]
+
+;; Contrato: string, lista-de-jogos -> lista-de-jogos
+
+(define (atualiza-jogos-do-time um-time lista-de-jogos)
+  (make-time
+            (time-nome (um-time))
+            (+ (time-jogos(um-time)) (conta-jogos-time lista-de-jogos (time-nome um-time)))
+            (time-vitórias(um-time))
+            (time-empates(um-time))
+            (time-derrotas(um-time))
+            )
+  )
+
+
+;; Apresente um programa que, dados os jogos de um campeonato, um nome de time e
+;; um novo nome, substitua o nome atual pelo novo nome em todos os jogos envolvendo
+;; aquele time como visitante.
+
+;; troca-nome: lista-de-jogos, string, string -> lista-de-jogos
+
+(define(troca-nome lista-de-jogos nome-antigo novo-nome)
+  (cond
+    [(empty? lista-de-jogos) empty]
+    [(string=? (jogo-visitante(first lista-de-jogos)) nome-antigo)
+     (cons (make-jogo (jogo-local(first lista-de-jogos))
+                       novo-nome
+                      (jogos-gols-local (first lista-de-jogos))
+                      (jogos-gols-visitante(first lista-de-jogos)))
+           (troca-nome (rest lista-de-jogos)nome-antigo novo-nome))]
+    [else (cons (first lista-de-jogos) troca-nome) (rest lista-de-jogos) nome-antigo novo-nome]
+
+  
+; ordena: lista-de-números -> lista-de-números
+; exemplos:
+; (ordena empty) -> produz empty
+; (ordena (list 12 20 -5)) -> produz (list 20 12 -5)
+
+(define (ordena ldn)
+; se ldn for vazia: retornar lista vazia
+; se ldn não for vazia, deve inserir o primeiro elemento de ldn na posição correta do resto da lista ordenado
+(cond
+  [(empty? ldn) empty]
+  [else (insere (first ldn) (ordena (rest ldn)))]))
+
+; insere: número lista-de-números -> lista-de-números
+; exemplos:
+; (insere -5 empty) -> produz (list -5)
+; (insere 12 (list 20 -5)) -> produz (list 20 12 -5)
+
+(define (insere n ldn)
+; se ldn for vazia, devolver uma lista com n
+; se n é maior que o primeiro elemento ldn, deve-se contruir uma lista com n e ldn
+; caso contrário deve-se contruir uma lista com o primeiro elemento de ldn e a lista com o n inserido na posição correta do resto de ldn
+  (cond
+    [(empty? ldn)(list n)]
+    [(> n (first ldn)) (cons n ldn)]
+    [else (cons (first ldn) (insere n (rest ldn)))]))
+
+; exemplos:
+; (ordena (list 12 20 -5))
+
+(define (descendente-olhos-azuis? genitor)
+; verificar se genitor tem olhos azuis, devolver true
+; se algum descendente de genitor tem olhos azuis, devolver true
+  (or
+   (symbol=? (genitor-olhos genitor) 'azuis)
+   (filho-olhos-azuis? (genitor-filhos genitor))))
+
+; filhos-olhos-azuis? : lista-de-filhos -> booleano
+(define(filho-olhos-azuis? lf)
+  (cond
+    ; se a lf for vazia, devolver false
+    ; devolver se o primeiro da lf tem olhos azuis, ou se algum outro filho do resto da lf tem olhos azuis
+    [(empty? lf) false]
+    [else (or (descendente-olhos-azuis? (first lf)) (filho-olhos-azuis (rest lf)))]))
+
+; filho-olhos-azuis: lista-de-filhos -> Número
+(define(filho-olhos-azuis lf)
+  (cond
+    ; se a lf for vazia, devolver 0
+    [(empty? lf) 0]
+    ; devolver a soma do nº de descendente de olhos azuis do primeiro lf com o nº de descendentes de olhos azuis do resto da lf
+    [else (+ (descendente-olhos-azuis(first lf)) (filhos-olhos-azuis(rest lf)))]))
+  
+
+    
+    
+  
+
+  
+
+
+
+
